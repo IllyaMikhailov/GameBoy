@@ -1,10 +1,16 @@
 #include <GameBoy.h>
 
 GameBoy gb;
-#define forward 3
-#define left 4
-#define right 5
-#define backward 6
+
+#define btnUP 3
+#define btnLeft 4
+#define btnRight 5
+#define btnDown 6
+
+#define dirUP 0
+#define dirRight 1
+#define dirLeft 2
+#define dirDown 3
 
 int dirX, dirY;
 int XfoodX, YfoodY;
@@ -12,7 +18,8 @@ int snakeX[10];
 int snakeY[10];
 int x = 1;
 int y = 0;
-
+int direction = dirRight;
+int lenSnake = 5;
 void setup()
 {
   gb.begin(13);
@@ -59,25 +66,29 @@ void makeMove()
 {
   int key = gb.getKey();
   Serial.println(key);
-  if (forward == key)
+  if (btnUP == key)
   {
     y--;
     x = 0;
+    direction = dirUP;
   }
-  if (left == key)
+  if (btnLeft == key)
   {
     x--;
     y = 0;
+    direction = dirLeft;
   }
-  if (right == key)
+  if (btnRight == key)
   {
     x++;
     y = 0;
+    direction = dirRight;
   }
-  if (backward == key)
+  if (btnDown == key)
   {
     y++;
     x = 0;
+    direction = dirDown;
   }
 }
 
@@ -92,7 +103,37 @@ bool collision(int dirX, int dirY, int XfoodX, int YfoodY)
     return false;
   }
 }
-
+void move() {
+  for (int i = lenSnake - 1; i > 0; i--) {
+snakeX[i] = snakeX[i - 1];
+snakeY[1] = snakeY[i - 1];
+  }
+  if(direction == dirUP){
+    if(snakeY[0] == 0){
+      snakeY[0] = 15;
+    }else{
+      snakeY[0]--;
+    }
+  }else if(direction == dirDown){
+    if(snakeY[0] == 15){
+      snakeY[0] = 0;
+    }else{
+      snakeY[0]++;
+    }
+  }else if (direction == dirLeft){
+    if (snakeX[0] == 0){
+      snakeX[0] = 7;
+    }else{
+      snakeX[0]--;
+    }
+  }else if(direction == dirRight){
+    if(snakeX[0] == 7){
+      snakeX[0] = 0;
+    }else{
+      snakeX[0]++;
+    }
+  }
+}
 void randFood()
 {
   XfoodX = random(0, 8);
