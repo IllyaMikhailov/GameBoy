@@ -139,3 +139,8 @@ void randFood()
   XfoodX = random(0, 8);
   YfoodY = random(0, 16);
 }
+void drawSnake(){
+  for(int i = 0; i < lenSnake; i++){
+    gb.drawPoint(snakeX[i], snakeY[i]);
+  }
+}
