@@ -12,14 +12,16 @@ GameBoy gb;
 #define dirLeft 2
 #define dirDown 3
 
+bool state;
 int dirX, dirY;
 int XfoodX, YfoodY;
-int snakeX[10];
-int snakeY[10];
+int snakeX[15];
+int snakeY[15];
 int x = 1;
 int y = 0;
 int direction = dirRight;
 int lenSnake = 5;
+
 void setup()
 {
   gb.begin(13);
@@ -91,7 +93,15 @@ void makeMove()
     direction = dirDown;
   }
 }
-
+void drawFruit(){
+  state = !state;
+  if( state == true){
+   gb.drawPoint(XfoodX, YfoodY);
+  }
+  else{
+    gb.wipePoint(XfoodX, YfoodY);
+  }
+}
 bool collision(int dirX, int dirY, int XfoodX, int YfoodY)
 {
   if (dirY == YfoodY && dirX == XfoodX)  // Fixed logic to match the variable names
@@ -104,43 +114,58 @@ bool collision(int dirX, int dirY, int XfoodX, int YfoodY)
   }
 }
 void move() {
-  for (int i = lenSnake - 1; i > 0; i--) {
-snakeX[i] = snakeX[i - 1];
-snakeY[1] = snakeY[i - 1];
+  if ((snakeX[0] == XfoodX) and (snakeY[0] == YfoodY)) {
+    lenSnake++;
+    randFood();
   }
-  if(direction == dirUP){
-    if(snakeY[0] == 0){
+  for (int i = lenSnake - 1; i > 0; i--) {
+    snakeX[i] = snakeX[i - 1];
+    snakeY[1] = snakeY[i - 1];
+  }
+  if (direction == dirUP) {
+    if (snakeY[0] == 0) {
       snakeY[0] = 15;
-    }else{
+    } else {
       snakeY[0]--;
     }
-  }else if(direction == dirDown){
-    if(snakeY[0] == 15){
+  } else if (direction == dirDown) {
+    if (snakeY[0] == 15) {
       snakeY[0] = 0;
-    }else{
+    } else {
       snakeY[0]++;
     }
-  }else if (direction == dirLeft){
-    if (snakeX[0] == 0){
+  } else if (direction == dirLeft) {
+    if (snakeX[0] == 0) {
       snakeX[0] = 7;
-    }else{
+    } else {
       snakeX[0]--;
     }
-  }else if(direction == dirRight){
-    if(snakeX[0] == 7){
+  } else if (direction == dirRight) {
+    if (snakeX[0] == 7) {
       snakeX[0] = 0;
-    }else{
+    } else {
       snakeX[0]++;
     }
   }
 }
-void randFood()
-{
+void randFood() {
   XfoodX = random(0, 8);
   YfoodY = random(0, 16);
+  while (isPartOfSnake(YfoodY, YfoodY)) {
+    XfoodX = random(0, 8);
+    YfoodY = random(0, 16);
+  }
 }
-void drawSnake(){
-  for(int i = 0; i < lenSnake; i++){
+void drawSnake() {
+  for (int i = 0; i < lenSnake; i++) {
     gb.drawPoint(snakeX[i], snakeY[i]);
   }
+}
+boolean isPartOfSnake(int x, int y) {
+  for (int i = 0; i < lenSnake - 1; i++) {
+    if ((x == snakeX[i]) && (y == snakeY[i])) {
+      return true;
+    }
+  }
+  return false;
 }
