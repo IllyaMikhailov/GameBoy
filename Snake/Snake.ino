@@ -11,7 +11,7 @@ GameBoy gb;
 #define dirRight 1
 #define dirLeft 2
 #define dirDown 3
-
+unsigned int lenSnake = 2;
 bool state;
 int dirX, dirY;
 int XfoodX, YfoodY;
@@ -20,7 +20,6 @@ int snakeY[15];
 int x = 1;
 int y = 0;
 int direction = dirRight;
-int lenSnake = 5;
 
 void setup()
 {
@@ -34,33 +33,17 @@ void setup()
 void loop()
 {
   makeMove();
-  dirX = dirX + x;
-  dirY = dirY + y;
-  if (dirY > 15)
-  {
-    dirY = 0;
-  }
-  if (dirX > 7)
-  {
-    dirX = 0;
-  }
-  if (dirY < 0)
-  {
-    dirY = 15;
-  }
-  if (dirX < 0)
-  {
-    dirX = 7;
-  }
+  move();
 
   // Corrected variable names to XfoodX and YfoodY
-  if (collision(dirX, dirY, XfoodX, YfoodY)) {
+  if (collision(snakeX[0], snakeY[0], XfoodX, YfoodY)) {
+    lenSnake++;
     randFood();
   }
 
   gb.clearDisplay();
-  gb.drawPoint(dirX, dirY);
-  gb.drawPoint(XfoodX, YfoodY); // Corrected to XfoodX and YfoodY
+  drawSnake();
+  drawFruit();
   delay(300);
 }
 
@@ -68,37 +51,33 @@ void makeMove()
 {
   int key = gb.getKey();
   Serial.println(key);
-  if (btnUP == key)
+  if (btnUP == key && direction != dirDown)
   {
-    y--;
-    x = 0;
+
     direction = dirUP;
   }
-  if (btnLeft == key)
+  if (btnLeft == key && direction != dirRight)
   {
-    x--;
-    y = 0;
+
     direction = dirLeft;
   }
-  if (btnRight == key)
+  if (btnRight == key && direction != dirLeft)
   {
-    x++;
-    y = 0;
+
     direction = dirRight;
   }
-  if (btnDown == key)
+  if (btnDown == key && direction != dirUP)
   {
-    y++;
-    x = 0;
+
     direction = dirDown;
   }
 }
-void drawFruit(){
+void drawFruit() {
   state = !state;
-  if( state == true){
-   gb.drawPoint(XfoodX, YfoodY);
+  if ( state == true) {
+    gb.drawPoint(XfoodX, YfoodY);
   }
-  else{
+  else {
     gb.wipePoint(XfoodX, YfoodY);
   }
 }
@@ -117,6 +96,12 @@ void move() {
   if ((snakeX[0] == XfoodX) and (snakeY[0] == YfoodY)) {
     lenSnake++;
     randFood();
+    gb.sound(SCORE);
+  }
+  for (int i = lenSnake - 1; i > 0; i--) {
+    if (snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i]) {
+      gb.sound(COLLISION);
+    }
   }
   for (int i = lenSnake - 1; i > 0; i--) {
     snakeX[i] = snakeX[i - 1];
