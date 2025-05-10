@@ -48,12 +48,12 @@ void setup()
 
 void loop()
 {
-  loss();
+  
 
   makeMove();     //read buttons
   move();         //snake move
 
-  collision
+  collision;
   if (collision(snakeX[0], snakeY[0], FoodX, FoodY)) {
     lenSnake++;
     randomFood();
@@ -131,6 +131,7 @@ void move() {
   if ((snakeX[0] == FoodX) and (snakeY[0] == FoodY)) {
     lenSnake++;
     randomFood();
+    gb.sound(SCORE);
   }
 
   for (int i = lenSnake - 1; i > 0; i--) {
