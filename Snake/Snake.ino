@@ -50,17 +50,17 @@ void loop()
 {
   loss();
 
-   makeMove();     //read buttons
-   move();         //snake move
+  makeMove();     //read buttons
+  move();         //snake move
 
-   collision
-   if (collision(snakeX[0], snakeY[0], FoodX, FoodY)) {
-   lenSnake++;
-  randomFood();
+  collision
+  if (collision(snakeX[0], snakeY[0], FoodX, FoodY)) {
+    lenSnake++;
+    randomFood();
   }
   gb.clearDisplay();
   drawSnake();
-   gb.drawPoint(FoodX, FoodY);
+  gb.drawPoint(FoodX, FoodY);
   drawFruit();
   delay(200);
 }
@@ -180,7 +180,7 @@ boolean isPartOfSnake(int x, int y) {
   }
   return false;
 }
-void loss(){
+void loss() {
   for (size_t j = 0; j < 16; j++) {
 
     for (size_t i = 0; i < 8; i++) {
@@ -190,14 +190,14 @@ void loss(){
   }
   delay(500);
   gb.clearDisplay();
-for (int i = 0; i < lenSnake; i++){
-  snakeX[i] = 0;
-  snakeY[i] = 0;
-}
- direction = dirRight;
- FoodX = 3;
- FoodY = 3;
- lenSnake = 2;
- snakeX[0] = 4;
- snakeY[0] = 7;
+  for (int i = 0; i < lenSnake; i++) {
+    snakeX[i] = 0;
+    snakeY[i] = 0;
+  }
+  direction = dirRight;
+  FoodX = 3;
+  FoodY = 3;
+  lenSnake = 2;
+  snakeX[0] = 4;
+  snakeY[0] = 7;
 }
